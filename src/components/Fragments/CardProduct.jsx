@@ -2,7 +2,7 @@ import Button from "../Elements/Button";
 
 const CardProduct = ({ children }) => {
   return (
-    <div className="w-full max-w-sm bg-gray-800 border border-gray-700 rounded-lg shadow mx-2 flex flex-col justify-between">
+    <div className="w-full max-w-85 bg-gray-800 border border-gray-700 rounded-lg shadow mx-2 my-2 flex flex-col justify-between">
       {children}
     </div>
   );
@@ -10,11 +10,11 @@ const CardProduct = ({ children }) => {
 
 const Header = ({ imagesName }) => {
   return (
-    <a href="">
+    <a href="#">
       <img
         src={"/images/" + imagesName}
         alt="product"
-        className="p-8 rounded-t-lg"
+        className="p-6 rounded-t-lg"
       />
     </a>
   );
@@ -22,8 +22,8 @@ const Header = ({ imagesName }) => {
 
 const Body = ({ name, children }) => {
   return (
-    <div className="px-5 pb-5 h-full">
-      <a href="">
+    <div className="px-6 pb-6 h-full">
+      <a href="#">
         <h5 className="text-xl font-semibold tracking-tight text-white">
           {name}
         </h5>
@@ -33,11 +33,16 @@ const Body = ({ name, children }) => {
   );
 };
 
-const Footer = ({ price }) => {
+const Footer = ({ price, onAddToCard, id }) => {
   return (
-    <div className="flex items-center justify-between px-5 pb-5">
+    <div className="flex items-center justify-between px-6 pb-6">
       <span className="text-xl font-semibold text-white">${price}</span>
-      <Button classname="bg-blue-500">Add to cart</Button>
+      <Button
+        classname="bg-blue-600 text-white"
+        onClick={() => onAddToCard(id)}
+      >
+        Add to cart
+      </Button>
     </div>
   );
 };

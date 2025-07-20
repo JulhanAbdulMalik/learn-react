@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import CardProduct from "../Fragments/CardProduct";
 import Button from "../Elements/Button";
 
@@ -10,8 +10,7 @@ const products = [
     price: 100,
     description: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus
           illo eaque, laborum quibusdam soluta nostrum sed iure est a quas
-          voluptate obcaecati mollitia fugit earum deserunt cupiditate non
-          itaque maiores?`,
+          voluptate obcaecati.`,
   },
   {
     id: 2,
@@ -30,43 +29,110 @@ const products = [
           illo eaque, laborum quibusdam soluta nostrum sed iure est a quas
           voluptate obcaecati mollitia.`,
   },
+  {
+    id: 4,
+    name: "Nike Air Max 270",
+    imagesName: "shoes-1.jpg",
+    price: 200,
+    description: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus
+          illo eaque.`,
+  },
+  {
+    id: 5,
+    name: "Nike Air Max 90",
+    imagesName: "shoes-1.jpg",
+    price: 100,
+    description: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus
+          illo eaque, laborum quibusdam soluta nostrum sed iure est a quas
+          voluptate obcaecati.`,
+  },
 ];
 
 const email = localStorage.getItem("email");
 
 const ProductPage = () => {
-  const onHandleLogout = () => {
+  const [cart, setCart] = useState([]);
+
+  const handleLogout = () => {
     localStorage.removeItem("email");
     localStorage.removeItem("password");
 
     window.location.href = "/login";
   };
 
+  const handleAddToCard = (id) => {
+    if (cart.find((item) => item.id === id)) {
+      setCart(
+        cart.map((item) =>
+          item.id === id ? { ...item, qty: item.qty + 1 } : item
+        )
+      );
+    } else {
+      setCart([...cart, { id, qty: 1 }]);
+    }
+  };
+
   return (
     <Fragment>
       <div className="flex justify-end h-20 bg-gray-800 text-white items-center px-10">
         {email}
-        <Button
-          classname="bg-white text-gray-700 ml-5"
-          onClick={onHandleLogout}
-        >
+        <Button classname="bg-white text-gray-700 ml-5" onClick={handleLogout}>
           Logout
         </Button>
       </div>
 
       <div className="flex justify-center py-10">
-        {
-          // Rendering List
-          products.map((product) => (
-            <CardProduct key={product.id}>
-              <CardProduct.Header imagesName={product.imagesName} />
-              <CardProduct.Body name={product.name}>
-                {product.description}
-              </CardProduct.Body>
-              <CardProduct.Footer price={product.price} />
-            </CardProduct>
-          ))
-        }
+        <div className="w-3/3 flex flex-wrap">
+          {
+            // Rendering List
+            products.map((product) => (
+              <CardProduct key={product.id}>
+                <CardProduct.Header imagesName={product.imagesName} />
+                <CardProduct.Body name={product.name}>
+                  {product.description}
+                </CardProduct.Body>
+                <CardProduct.Footer
+                  price={product.price}
+                  onAddToCard={handleAddToCard}
+                  id={product.id}
+                />
+              </CardProduct>
+            ))
+          }
+        </div>
+        <div className="w-1/2">
+          <h1 className="text-3xl font-bold text-gray-700 ml-6 mb-2">Card</h1>
+          <ul>
+            <table className="text-left table-auto border-separate border-spacing-x-7">
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Product</th>
+                  <th>Price</th>
+                  <th>Qty</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {cart.map((item) => {
+                  const product = products.find(
+                    (product) => product.id === item.id
+                  );
+
+                  return (
+                    <tr key={item.id}>
+                      <td>{product.id}</td>
+                      <td>{product.name}</td>
+                      <td>${product.price}</td>
+                      <td>{item.qty}</td>
+                      <td>${product.price * item.qty}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </ul>
+        </div>
       </div>
     </Fragment>
   );
