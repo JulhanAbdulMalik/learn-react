@@ -36,7 +36,7 @@ const ProductPage = () => {
       {
         // Rendering List
         products.map((product) => (
-          <CardProduct>
+          <CardProduct key={product.id}>
             <CardProduct.Header imagesName={product.imagesName} />
             <CardProduct.Body name={product.name}>
               {product.description}
