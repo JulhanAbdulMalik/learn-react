@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import CardProduct from "../Fragments/CardProduct";
 import Button from "../Elements/Button";
 
@@ -52,6 +52,32 @@ const email = localStorage.getItem("email");
 
 const ProductPage = () => {
   const [cart, setCart] = useState([]);
+  const [totalPrice, setTotalPrice] = useState();
+
+  // ComponentDidMount pada FunctionalComponent
+  useEffect(() => {
+    // Memanggil data dari LocalStorage dengan nama 'cart'
+    setCart(JSON.parse(localStorage.getItem("cart")) || []);
+  }, []);
+
+  // ComponentDidUpdate pada FunctionalComponent
+  useEffect(() => {
+    if (cart.length > 0) {
+      const sum = cart.reduce((acc, item) => {
+        // Temukan dulu Product nya per item
+        const product = products.find((product) => product.id === item.id);
+
+        // acc singkatan dari Accumulator
+        return acc + product.price * item.qty;
+      }, 0);
+
+      setTotalPrice(sum);
+
+      // Menyimpan ke LocalStorage, tapi di ubah dulu ke JSON String
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+    // dibawah adalah Depedency, untuk melihat perubahan pada state 'cart'
+  }, [cart]);
 
   const handleLogout = () => {
     localStorage.removeItem("email");
@@ -129,6 +155,14 @@ const ProductPage = () => {
                     </tr>
                   );
                 })}
+                <tr>
+                  <td colSpan={4} className="py-2">
+                    <b>Total Price</b>
+                  </td>
+                  <td>
+                    <b>${totalPrice}</b>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </ul>
