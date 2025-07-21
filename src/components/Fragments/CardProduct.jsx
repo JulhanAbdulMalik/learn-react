@@ -8,13 +8,13 @@ const CardProduct = ({ children }) => {
   );
 };
 
-const Header = ({ imagesName }) => {
+const Header = ({ images }) => {
   return (
     <a href="#">
       <img
-        src={"/images/" + imagesName}
+        src={images}
         alt="product"
-        className="p-6 rounded-t-lg"
+        className="p-6 rounded-t-lg w-full object-cover h-70"
       />
     </a>
   );
@@ -25,9 +25,9 @@ const Body = ({ name, children }) => {
     <div className="px-6 pb-6 h-full">
       <a href="#">
         <h5 className="text-xl font-semibold tracking-tight text-white">
-          {name}
+          {name.substring(0, 20)}
         </h5>
-        <p className="text-sm text-white">{children}</p>
+        <p className="text-sm text-white">{children.substring(0, 100)}</p>
       </a>
     </div>
   );

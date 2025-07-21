@@ -1,58 +1,21 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import CardProduct from "../Fragments/CardProduct";
 import Button from "../Elements/Button";
-
-const products = [
-  {
-    id: 1,
-    name: "Nike Air Max 90",
-    imagesName: "shoes-1.jpg",
-    price: 100,
-    description: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus
-          illo eaque, laborum quibusdam soluta nostrum sed iure est a quas
-          voluptate obcaecati.`,
-  },
-  {
-    id: 2,
-    name: "Nike Air Max 270",
-    imagesName: "shoes-1.jpg",
-    price: 200,
-    description: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus
-          illo eaque.`,
-  },
-  {
-    id: 3,
-    name: "Nike Air Max 720",
-    imagesName: "shoes-1.jpg",
-    price: 80,
-    description: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus
-          illo eaque, laborum quibusdam soluta nostrum sed iure est a quas
-          voluptate obcaecati mollitia.`,
-  },
-  {
-    id: 4,
-    name: "Nike Air Max 270",
-    imagesName: "shoes-1.jpg",
-    price: 200,
-    description: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus
-          illo eaque.`,
-  },
-  {
-    id: 5,
-    name: "Nike Air Max 90",
-    imagesName: "shoes-1.jpg",
-    price: 100,
-    description: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus
-          illo eaque, laborum quibusdam soluta nostrum sed iure est a quas
-          voluptate obcaecati.`,
-  },
-];
+import getProducts from "../../services/product.service";
 
 const email = localStorage.getItem("email");
 
 const ProductPage = () => {
   const [cart, setCart] = useState([]);
   const [totalPrice, setTotalPrice] = useState();
+  const [products, setProducts] = useState([]);
+
+  // Data dari API
+  useEffect(() => {
+    getProducts((data) => {
+      setProducts(data);
+    });
+  });
 
   // ComponentDidMount pada FunctionalComponent
   useEffect(() => {
@@ -62,7 +25,7 @@ const ProductPage = () => {
 
   // ComponentDidUpdate pada FunctionalComponent
   useEffect(() => {
-    if (cart.length > 0) {
+    if (products.length > 0 && cart.length > 0) {
       const sum = cart.reduce((acc, item) => {
         // Temukan dulu Product nya per item
         const product = products.find((product) => product.id === item.id);
@@ -77,7 +40,7 @@ const ProductPage = () => {
       localStorage.setItem("cart", JSON.stringify(cart));
     }
     // dibawah adalah Depedency, untuk melihat perubahan pada state 'cart'
-  }, [cart]);
+  }, [cart, products]);
 
   const handleLogout = () => {
     localStorage.removeItem("email");
@@ -121,19 +84,20 @@ const ProductPage = () => {
         <div className="w-3/3 flex flex-wrap">
           {
             // Rendering List
-            products.map((product) => (
-              <CardProduct key={product.id}>
-                <CardProduct.Header imagesName={product.imagesName} />
-                <CardProduct.Body name={product.name}>
-                  {product.description}
-                </CardProduct.Body>
-                <CardProduct.Footer
-                  price={product.price}
-                  onAddToCard={handleAddToCard}
-                  id={product.id}
-                />
-              </CardProduct>
-            ))
+            products.length > 0 &&
+              products.map((product) => (
+                <CardProduct key={product.id}>
+                  <CardProduct.Header images={product.image} />
+                  <CardProduct.Body name={product.title}>
+                    {product.description}
+                  </CardProduct.Body>
+                  <CardProduct.Footer
+                    price={product.price}
+                    onAddToCard={handleAddToCard}
+                    id={product.id}
+                  />
+                </CardProduct>
+              ))
           }
         </div>
         <div className="w-1/2">
@@ -150,21 +114,22 @@ const ProductPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {cart.map((item) => {
-                  const product = products.find(
-                    (product) => product.id === item.id
-                  );
+                {products.length > 0 &&
+                  cart.map((item) => {
+                    const product = products.find(
+                      (product) => product.id === item.id
+                    );
 
-                  return (
-                    <tr key={item.id}>
-                      <td>{product.id}</td>
-                      <td>{product.name}</td>
-                      <td>${product.price}</td>
-                      <td>{item.qty}</td>
-                      <td>${product.price * item.qty}</td>
-                    </tr>
-                  );
-                })}
+                    return (
+                      <tr key={item.id}>
+                        <td>{product.id}</td>
+                        <td>{product.title.substring(0, 20)}</td>
+                        <td>${product.price}</td>
+                        <td>{item.qty}</td>
+                        <td>${product.price * item.qty}</td>
+                      </tr>
+                    );
+                  })}
                 <tr ref={totalPriceRef}>
                   <td colSpan={4} className="py-2">
                     <b>Total Price</b>
