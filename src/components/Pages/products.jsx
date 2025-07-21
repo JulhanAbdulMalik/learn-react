@@ -2,13 +2,13 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import CardProduct from "../Fragments/CardProduct";
 import Button from "../Elements/Button";
 import getProducts from "../../services/product.service";
-import { getUsername } from "../../services/auth.service";
+import { useLogin } from "../../hooks/useLogin";
 
 const ProductPage = () => {
   const [cart, setCart] = useState([]);
   const [totalPrice, setTotalPrice] = useState();
   const [products, setProducts] = useState([]);
-  const [username, setUsername] = useState("");
+  const username = useLogin();
 
   // Data dari API
   useEffect(() => {
@@ -21,17 +21,6 @@ const ProductPage = () => {
   useEffect(() => {
     // Memanggil data dari LocalStorage dengan nama 'cart'
     setCart(JSON.parse(localStorage.getItem("cart")) || []);
-  }, []);
-
-  // ComponentDidMount ini yang menyebabkan Tidak bisa masuk ke halaman '/products' tanpa login
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      setUsername(getUsername(token));
-    } else {
-      window.location.href = "/login";
-    }
   }, []);
 
   // ComponentDidUpdate pada FunctionalComponent
