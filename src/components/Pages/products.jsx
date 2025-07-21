@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import CardProduct from "../Fragments/CardProduct";
 import Button from "../Elements/Button";
 
@@ -98,6 +98,16 @@ const ProductPage = () => {
     }
   };
 
+  // Penggunaan useRef, untuk mengakses DOM Element 'totalPrice' ditampilkan ketika ada item di cart
+  const totalPriceRef = useRef(null);
+  useEffect(() => {
+    if (cart.length > 0) {
+      totalPriceRef.current.style.display = "table-row";
+    } else {
+      totalPriceRef.current.style.display = "none";
+    }
+  });
+
   return (
     <Fragment>
       <div className="flex justify-end h-20 bg-gray-800 text-white items-center px-10">
@@ -155,7 +165,7 @@ const ProductPage = () => {
                     </tr>
                   );
                 })}
-                <tr>
+                <tr ref={totalPriceRef}>
                   <td colSpan={4} className="py-2">
                     <b>Total Price</b>
                   </td>

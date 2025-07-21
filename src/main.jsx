@@ -11,7 +11,14 @@ import ProductPage from "./components/Pages/products";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <div className="">Hello World!</div>,
+    element: (
+      <div className="flex justify-center min-h-screen items-center flex-col">
+        Hello World!
+        <a href="/login" className="text-blue-500 font-bold text-3xl">
+          Login
+        </a>
+      </div>
+    ),
     errorElement: <ErrorPage />,
   },
   {
