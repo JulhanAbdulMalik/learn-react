@@ -1,31 +1,43 @@
 import InputForm from "../Elements/Input";
 import Button from "../Elements/Button";
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
+import login from "../../services/auth.service";
 
 const FormLogin = () => {
+  const [loginField, setLoginField] = useState("");
+
   const onHandleLogin = (e) => {
     e.preventDefault();
 
-    localStorage.setItem("email", e.target.email.value);
-    localStorage.setItem("password", e.target.password.value);
+    const data = {
+      username: e.target.username.value,
+      password: e.target.password.value,
+    };
 
-    window.location.href = "/products";
+    login(data, (status, res) => {
+      if (status) {
+        localStorage.setItem("token", res);
+        window.location.href = "/products";
+      } else {
+        setLoginField(res.response.data);
+      }
+    });
   };
 
-  const emailRef = useRef(null);
+  const usernameRef = useRef(null);
 
   useEffect(() => {
-    emailRef.current.focus();
+    usernameRef.current.focus();
   }, []);
 
   return (
     <form onSubmit={onHandleLogin}>
       <InputForm
-        label="Email"
-        type="email"
-        name="email"
-        placeholder="example@main.com"
-        ref={emailRef}
+        label="Username"
+        type="username"
+        name="username"
+        placeholder="John Doe"
+        ref={usernameRef}
       />
       <InputForm
         label="Password"
@@ -36,6 +48,9 @@ const FormLogin = () => {
       <Button classname="w-full bg-gray-700 text-white" type="submit">
         Login
       </Button>
+      {loginField !== "" && (
+        <p className="text-red-500 text-center mt-3">{loginField}</p>
+      )}
     </form>
   );
 };

@@ -2,13 +2,13 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import CardProduct from "../Fragments/CardProduct";
 import Button from "../Elements/Button";
 import getProducts from "../../services/product.service";
-
-const email = localStorage.getItem("email");
+import { getUsername } from "../../services/auth.service";
 
 const ProductPage = () => {
   const [cart, setCart] = useState([]);
   const [totalPrice, setTotalPrice] = useState();
   const [products, setProducts] = useState([]);
+  const [username, setUsername] = useState("");
 
   // Data dari API
   useEffect(() => {
@@ -21,6 +21,17 @@ const ProductPage = () => {
   useEffect(() => {
     // Memanggil data dari LocalStorage dengan nama 'cart'
     setCart(JSON.parse(localStorage.getItem("cart")) || []);
+  }, []);
+
+  // ComponentDidMount ini yang menyebabkan Tidak bisa masuk ke halaman '/products' tanpa login
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      setUsername(getUsername(token));
+    } else {
+      window.location.href = "/login";
+    }
   }, []);
 
   // ComponentDidUpdate pada FunctionalComponent
@@ -43,8 +54,7 @@ const ProductPage = () => {
   }, [cart, products]);
 
   const handleLogout = () => {
-    localStorage.removeItem("email");
-    localStorage.removeItem("password");
+    localStorage.removeItem("token");
 
     window.location.href = "/login";
   };
@@ -74,7 +84,7 @@ const ProductPage = () => {
   return (
     <Fragment>
       <div className="flex justify-end h-20 bg-gray-800 text-white items-center px-10">
-        {email}
+        {username}
         <Button classname="bg-white text-gray-700 ml-5" onClick={handleLogout}>
           Logout
         </Button>
