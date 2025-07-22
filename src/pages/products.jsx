@@ -1,8 +1,8 @@
 import { Fragment, useEffect, useRef, useState } from "react";
-import CardProduct from "../Fragments/CardProduct";
-import Button from "../Elements/Button";
-import getProducts from "../../services/product.service";
-import { useLogin } from "../../hooks/useLogin";
+import CardProduct from "../components/Fragments/CardProduct";
+import Button from "../components/Elements/Button";
+import getProducts from "../services/product.service";
+import { useLogin } from "../hooks/useLogin";
 
 const ProductPage = () => {
   const [cart, setCart] = useState([]);
@@ -86,7 +86,7 @@ const ProductPage = () => {
             products.length > 0 &&
               products.map((product) => (
                 <CardProduct key={product.id}>
-                  <CardProduct.Header images={product.image} />
+                  <CardProduct.Header images={product.image} id={product.id} />
                   <CardProduct.Body name={product.title}>
                     {product.description}
                   </CardProduct.Body>

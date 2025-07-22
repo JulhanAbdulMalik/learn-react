@@ -3,11 +3,12 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import LoginPage from "./components/Pages/login";
-import RegisterPage from "./components/Pages/register";
-import ErrorPage from "./components/Pages/404";
-import ProductPage from "./components/Pages/products";
-import ProfilePage from "./components/Pages/profiles";
+import LoginPage from "./pages/login";
+import RegisterPage from "./pages/register";
+import ErrorPage from "./pages/404";
+import ProductPage from "./pages/products";
+import ProfilePage from "./pages/profiles";
+import DetailProductPage from "./pages/detailProduct";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
   {
     path: "/profile",
     element: <ProfilePage />,
+  },
+  {
+    path: "/product/:id",
+    element: <DetailProductPage />,
   },
 ]);
 
