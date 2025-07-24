@@ -51,6 +51,9 @@ const FormLogin = () => {
       {loginField !== "" && (
         <p className="text-red-500 text-center mt-3">{loginField}</p>
       )}
+      <div className="text-gray-300 mt-3">
+        <p>Example Account:</p> <p>Username: johnd</p> <p>Password: m38rmF$</p>
+      </div>
     </form>
   );
 };

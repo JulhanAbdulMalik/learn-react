@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getDetailProduct } from "../services/product.service";
 import Button from "../components/Elements/Button";
+import { useLogin } from "../hooks/useLogin";
+
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/slices/cartSlice";
 
 const DetailProductPage = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+
+  const dispatch = useDispatch();
+
+  useLogin();
 
   useEffect(() => {
     getDetailProduct(id, (data) => {
@@ -17,7 +25,7 @@ const DetailProductPage = () => {
     window.history.back();
   };
 
-  // Menampilkan jika produk tidak ditemukan
+  // Ditampilkan jika produk tidak ditemukan
   if (!product) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -62,9 +70,12 @@ const DetailProductPage = () => {
             <p className="text-2xl font-bold text-gray-700">
               ${product.price.toFixed(2)}
             </p>
-            <button className="bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out">
+            <Button
+              classname="bg-gray-700 hover:bg-gray-800 text-white"
+              onClick={() => dispatch(addToCart({ id: product.id, qty: 1 }))}
+            >
               Add to Cart
-            </button>
+            </Button>
           </div>
         </div>
       </div>
