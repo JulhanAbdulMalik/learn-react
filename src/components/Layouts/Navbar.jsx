@@ -3,6 +3,7 @@ import { useLogin } from "../../hooks/useLogin";
 import Button from "../Elements/Button";
 import { useSelector } from "react-redux";
 import { DarkModeContext } from "../../context/DarkMode";
+import { useTotalPrice } from "../../hooks/useTotalPrice";
 
 const Navbar = () => {
   const username = useLogin();
@@ -11,6 +12,8 @@ const Navbar = () => {
   const cart = useSelector((state) => state.cart.data);
 
   const { isDarkMode, setIsDarkMode } = useContext(DarkModeContext);
+
+  const totalPrice = useTotalPrice();
 
   useEffect(() => {
     setTotalCart(cart.length);
@@ -25,12 +28,12 @@ const Navbar = () => {
   return (
     <div className="flex justify-end h-20 bg-gray-800 text-white items-center px-10">
       {username}
+      <div className="flex items-center bg-white text-gray-700 ml-5 pl-4 pr-4 p-2 rounded-md ">
+        Item: {totalCart} | Price: ${totalPrice.total.toFixed(2)}
+      </div>
       <Button classname="bg-white text-gray-700 ml-5" onClick={handleLogout}>
         Logout
       </Button>
-      <div className="flex items-center bg-white text-gray-700 ml-5 pl-4 pr-4 p-2 rounded-md ">
-        {totalCart}
-      </div>
       <button
         className="top-5 right-5 bg-white text-gray-700 p-2 rounded ml-5"
         onClick={() => setIsDarkMode(!isDarkMode)}

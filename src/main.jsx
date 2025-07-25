@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+// Pages
 import LoginPage from "./pages/login";
 import RegisterPage from "./pages/register";
 import ErrorPage from "./pages/404";
@@ -10,10 +11,13 @@ import ProductPage from "./pages/products";
 import ProfilePage from "./pages/profiles";
 import DetailProductPage from "./pages/detailProduct";
 
+// Redux
 import { Provider } from "react-redux";
 import store from "./redux/store";
 
+// Context
 import DarkModeContextProvider from "./context/DarkMode";
+import { TotalPriceProvider } from "./context/TotalPriceContext";
 
 const router = createBrowserRouter([
   {
@@ -54,7 +58,9 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
       <DarkModeContextProvider>
-        <RouterProvider router={router} />
+        <TotalPriceProvider>
+          <RouterProvider router={router} />
+        </TotalPriceProvider>
       </DarkModeContextProvider>
     </Provider>
   </StrictMode>

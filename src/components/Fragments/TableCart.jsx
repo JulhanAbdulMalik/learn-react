@@ -1,14 +1,20 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { DarkModeContext } from "../../context/DarkMode";
+import {
+  useTotalPrice,
+  useTotalPriceDispatch,
+} from "../../hooks/useTotalPrice";
 
 const TableCart = (props) => {
   const { products } = props;
 
   const cart = useSelector((state) => state.cart.data);
-  const [totalPrice, setTotalPrice] = useState(0);
 
   const { isDarkMode } = useContext(DarkModeContext);
+
+  const dispatch = useTotalPriceDispatch();
+  const totalPrice = useTotalPrice();
 
   // ComponentDidUpdate pada FunctionalComponent
   useEffect(() => {
@@ -21,13 +27,19 @@ const TableCart = (props) => {
         return acc + product.price * item.qty;
       }, 0);
 
-      setTotalPrice(sum);
+      // Menggunakan Dispatch untuk update TotalPrice
+      dispatch({
+        type: "UPDATE",
+        payload: {
+          total: sum,
+        },
+      });
 
       // Menyimpan ke LocalStorage, tapi di ubah dulu ke JSON String
       localStorage.setItem("cart", JSON.stringify(cart));
     }
     // dibawah adalah Depedency, untuk melihat perubahan pada state 'cart'
-  }, [cart, products]);
+  }, [cart, products, dispatch]);
 
   // Penggunaan useRef, untuk mengakses DOM Element 'totalPrice' ditampilkan ketika ada item di cart
   const totalPriceRef = useRef(null);
@@ -74,7 +86,7 @@ const TableCart = (props) => {
             <b>Total Price</b>
           </td>
           <td>
-            <b>${totalPrice.toFixed(2)}</b>
+            <b>${totalPrice.total.toFixed(2)}</b>
           </td>
         </tr>
       </tbody>
